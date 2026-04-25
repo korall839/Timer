@@ -43,46 +43,46 @@ class MyApp(App):
         layout=FloatLayout()
         self.a=Label(
             text="0",
-            pos=(300,1500),
+            pos=(200,400),
             size_hint=(0.2,0.1)
         )
         b=Button(
             text="+5",
-            pos=(800,1000),
+            pos=(400,200),
             size_hint=(0.2,0.1)
         )
         c=Button(
             text="-5",
-            pos=(100,1000),
+            pos=(100,200),
             size_hint=(0.2,0.1)
         )
         d=Button(
             text="таймер/старт",
-            pos=(400,1250),
+            pos=(200,300),
             size_hint=(0.3,0.1)
         )
         e=Button(
             text="+1",
-            pos=(800,750),
+            pos=(400,100),
             size_hint=(0.2,0.1))
         f=Button(
             text="-1",
-            pos=(100,750),
+            pos=(100,100),
             size_hint=(0.2,0.1)
         )
         g=Button(
             text="-30",
-            pos=(100,1250),
+            pos=(100,300),
             size_hint=(0.2,0.1)
         )
         h=Button(
             text="+30",
-            pos=(800,1250),
+            pos=(400,300),
             size_hint=(0.2,0.1)
         )
         i=Button(
             text="секундомер/старт",
-            pos=(400,1000),
+            pos=(200,200),
             size_hint=(0.3,0.1)
         )
         b.bind(on_press=self.plys10)
