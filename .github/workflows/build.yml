@@ -53,6 +53,7 @@ jobs:
             buildozer init
           fi
           yes | buildozer android clean
+          yes | echo "y" | /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager --sdk_root=/home/runner/.buildozer/android/platform/android-sdk --licenses
           yes | buildozer android debug
 
       - name: Upload APK Artifact
