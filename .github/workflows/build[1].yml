@@ -21,41 +21,18 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Install System Dependencies
+      - name: Install Critical System Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
+          sudo apt-get update --fix-missing
+          sudo apt-get install -y --no-install-recommends \
             build-essential \
             git \
-            ffmpeg \
-            libsdl2-dev \
-            libsdl2-image-dev \
-            libsdl2-mixer-dev \
-            libsdl2-ttf-dev \
-            libportmidi-dev \
-            libswscale-dev \
-            libavformat-dev \
-            libavcodec-dev \
-            zlib1g-dev \
-            libgstreamer1.0-dev \
-            gstreamer1.0-plugins-base \
-            gstreamer1.0-plugins-good \
-            libsqlite3-dev \
-            sqlite3 \
-            bzip2 \
-            libbz2-dev \
-            libssl-dev \
-            openssl \
-            libgdbm-dev \
-            libgdbm-compat-dev \
-            liblzma-dev \
-            libreadline-dev \
-            libncursesw5-dev \
-            libffi-dev \
-            uuid-dev \
-            unzip \
             zip \
-            tar
+            unzip \
+            tar \
+            zlib1g-dev \
+            libffi-dev \
+            libssl-dev
 
       - name: Install Buildozer and Cython
         run: |
@@ -67,7 +44,6 @@ jobs:
           if [ ! -f buildozer.spec ]; then
             buildozer init
           fi
-          # Автоматически принимаем все лицензии Android SDK перед сборкой
           yes | buildozer android clean
           yes | buildozer android debug
 
