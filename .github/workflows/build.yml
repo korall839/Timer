@@ -21,11 +21,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Accept Android SDK Licenses
-        uses: android-actions/setup-android@v3
-        with:
-          accept-android-sdk-licenses: true
-          packages: platform-tools
+      # Мы полностью убрали конфликтующий шаг setup-android
 
       - name: Install Critical System Dependencies
         run: |
@@ -53,7 +49,7 @@ jobs:
           if [ ! -f buildozer.spec ]; then
             buildozer init
           fi
-          # Убрали команду 'clean', которая вызывала FileNotFoundError
+          # Передаем 'y' для автоматического согласия со всеми лицензиями самого buildozer
           yes | buildozer android debug
 
       - name: Upload APK Artifact
