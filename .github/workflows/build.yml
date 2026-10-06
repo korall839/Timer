@@ -21,6 +21,10 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      # ПЕРВЫЙ ВАРИАНТ УСТАНАВЛИВАЕТСЯ СЮДА:
+      - name: Accept Android SDK Licenses
+        uses: android-actions/setup-android@v3
+
       - name: Install Critical System Dependencies
         run: |
           sudo apt-get update --fix-missing
