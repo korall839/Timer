@@ -1,0 +1,23 @@
+name: Build APK
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build with Buildozer
+        run: |
+          subo apt-get update
+          subo apt-get install -y python3-pip python3-venv
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install buildozer
+          buildozer init || true
+          cp buildozer.spec buildozer.spec.orig 2>/dev/null || true
+          cp buildozer.spec.orig buildozer.spec 2>/dev/null || true
+          buildozer android debug
+      -name: Upload APK
+       uses: actions/upload-artifact@v3
+       with:
+         name: apk-package
+         path: bin/*.apk
