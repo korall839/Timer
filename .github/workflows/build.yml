@@ -45,7 +45,7 @@ jobs:
       - name: Pre-clone python-for-android (Fix FileNotFoundError)
         run: |
           mkdir -p .buildozer/android/platform
-          git clone --branch release-2024.01.21 https://github.com/timer .buildozer/android/platform/python-for-android
+          git clone --branch release-2024.01.21 https://github.com/korall839/timer .buildozer/android/platform/python-for-android
 
       - name: Build APK with Buildozer
         run: |
