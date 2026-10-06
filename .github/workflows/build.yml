@@ -32,7 +32,10 @@ jobs:
             tar \
             zlib1g-dev \
             libffi-dev \
-            libssl-dev
+            libssl-dev \
+            autoconf \
+            libtool \
+            pkg-config
 
       - name: Install Buildozer and Cython
         run: |
@@ -44,9 +47,9 @@ jobs:
           if [ ! -f buildozer.spec ]; then
             buildozer init
           fi
-          [ -d .buildozer/platform/python-for-android ] && rm -rf .buildozer/platform/python-for-android || true
-          yes | buildozer android clean
-          yes | buildozer android debug
+          # Принудительно очищаем кэш и собираем, жестко указав рабочую ветку p4a через переменную окружения
+          yes | APP_p4a_branch=release-2024.01.21 buildozer android clean
+          yes | APP_p4a_branch=release-2024.01.21 buildozer android debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
