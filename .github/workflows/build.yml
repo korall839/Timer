@@ -40,7 +40,7 @@ jobs:
       - name: Install Buildozer and Cython
         run: |
           pip install --upgrade pip
-          pip install "cython<3.0.0" buildozer virtualenv sh colorama jinja2 appdirs
+          pip install "cython<3.0.0" buildozer virtualenv sh colorama jinja2 appdirs toml
 
       - name: Pre-clone python-for-android (Fix FileNotFoundError)
         run: |
