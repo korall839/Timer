@@ -28,4 +28,4 @@ log_level = 2
 warn_on_root = 1
 
 # Фиксируем стабильную ветку сборщика, чтобы избежать FileNotFoundError
-p4a.branch = release-2022.12.20
+p4a.branch = master
