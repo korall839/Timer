@@ -53,7 +53,7 @@ jobs:
           if [ ! -f buildozer.spec ]; then
             buildozer init
           fi
-          yes | buildozer android clean
+          # Убрали команду 'clean', которая вызывала FileNotFoundError
           yes | buildozer android debug
 
       - name: Upload APK Artifact
