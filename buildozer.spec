@@ -12,13 +12,13 @@ orientation = portrait
 android.permissions = INTERNET,VIBRAT
 
 # (int) Target Android API, should be as high as possible.
-android.api = 34
+android.api = 31
 
 # (int) Minimum API your APK will support.
 android.minapi = 21
 
 # (str) Android NDK version to use
-android.ndk = 26b
+android.ndk = 23c
 
 # (bool) Use davax instead of dx
 android.skip_apk_rescale = False
@@ -28,4 +28,4 @@ log_level = 2
 warn_on_root = 1
 
 # Фиксируем стабильную ветку сборщика, чтобы избежать FileNotFoundError
-p4a.branch = master
+p4a.branch = release-2022.12.20
