@@ -44,6 +44,7 @@ jobs:
           if [ ! -f buildozer.spec ]; then
             buildozer init
           fi
+          [ -d .buildozer/platform/python-for-android ] && rm -rf .buildozer/platform/python-for-android || true
           yes | buildozer android clean
           yes | buildozer android debug
 
