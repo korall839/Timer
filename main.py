@@ -4,29 +4,36 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.app import App
+from kivy.clock import Clock, mainthread  # ДОБАВИЛИ для безопасного обновления UI
 import threading
 import time
 import os
 
 class Timer(Screen):
+    # Безопасный метод обновления UI из фоновых потоков
+    @mainthread
+    def update_label_text(self, label, value):
+        label.text = value
+
     def start1(self, instance):
         def timer1():
-            global a
             while int(self.a.text) > 0:
-                self.a.text = str(int(self.a.text) - 1)
+                # Меняем текст через @mainthread, иначе Android упадет
+                self.update_label_text(self.a, str(int(self.a.text) - 1))
                 time.sleep(1)
-        
+
         threading.Thread(target=timer1, daemon=True).start()
 
     def start2(self, instance):
         def timer2():
-            global a
             while int(self.a.text) > 0:
-                self.a.text = str(int(self.a.text) + 1)
+                self.update_label_text(self.a, str(int(self.a.text) + 1))
                 time.sleep(1)
+        
         self.a.text = str(int(self.a.text) + 1)
         threading.Thread(target=timer2, daemon=True).start()
         self.a.text = str(int(self.a.text) - 1)
+
     def plys10(self, instance):
         self.a.text = str(int(self.a.text) + 5)
 
@@ -49,87 +56,89 @@ class Timer(Screen):
             self.a.text = str(int(self.a.text) - 1)
 
     def __init__(self, **kwargs):
+        super().__init__(**kwargs)  # СТРОГО на первую строчку, до создания виджетов
         layout = FloatLayout()
-        
-        super().__init__(**kwargs)
-    
+
         self.a = Label(
             text="0",
             pos_hint={'x': 0.375, 'y': 0.6},
             size_hint=(0.2, 0.1)
         )
-        
+
         self.g = Label(
             text="0",
             pos_hint={'x': 0.375, 'y': 0.7},
             size_hint=(0.2, 0.1)
         )
-    
-        def update_clock():
-            global g
-            while True:
-                current_time = time.strftime("%H:%M")
-                self.g.text = current_time
-            
-                try:
-                    with open('clock.txt', 'r') as clock:
-                        for line in clock:
-                            if current_time == line.strip():
-                                self.g.text += " будильник сработал"
-                except FileNotFoundError:
-                    pass
-                time.sleep(1)
 
-        threading.Thread(target=update_clock, daemon=True).start()
-    
+        # Перевели бесконечный цикл чтения диска на оптимизированный Clock Kivy
+        def update_clock_callback(dt):
+            current_time = time.strftime("%H:%M")
+            display_text = current_time
+
+            # На Android файлы сохраняются в личную папку приложения
+            try:
+                with open('clock.txt', 'r') as clock:
+                    for line in clock:
+                        if current_time == line.strip():
+                            display_text += " будильник сработал"
+            except FileNotFoundError:
+                pass
+            
+            self.g.text = display_text
+
+        # Запускает проверку ровно раз в секунду без лагов и перегрева батареи
+        Clock.schedule_interval(update_clock_callback, 1)
+
         b = Button(
             text="+5",
             pos_hint={'x': 0.7, 'y': 0.4},
             size_hint=(0.2, 0.1)
         )
-        
+
         c = Button(
             text="-5",
             pos_hint={'x': 0.1, 'y': 0.4},
             size_hint=(0.2, 0.1)
         )
-        
+
         d = Button(
             text="таймер/старт",
             pos_hint={'x': 0.375, 'y': 0.5},
             size_hint=(0.25, 0.1)
         )
-        
+
         e = Button(
             text="+1",
             pos_hint={'x': 0.7, 'y': 0.3},
             size_hint=(0.2, 0.1)
         )
-        f=Button(
+        f = Button(
             text="-1",
-            pos_hint=({'x':0.1,'y':0.3}),
-            size_hint=(0.2,0.1)
+            pos_hint={'x': 0.1, 'y': 0.3},
+            size_hint=(0.2, 0.1)
         )
-        g=Button(
+        g = Button(
             text="-30",
-            pos_hint=({'x':0.1,'y':0.5}),
-            size_hint=(0.2,0.1)
+            pos_hint={'x': 0.1, 'y': 0.5},
+            size_hint=(0.2, 0.1)
         )
-        h=Button(
+        h = Button(
             text="+30",
-            pos_hint=({'x':0.7,'y':0.5}),
-            size_hint=(0.2,0.1)
+            pos_hint={'x': 0.7, 'y': 0.5},
+            size_hint=(0.2, 0.1)
         )
-        i=Button(
+        i = Button(
             text="секундомер/старт",
-            pos_hint=({'x':0.375,'y':0.4}),
-            size_hint=(0.25,0.1)
+            pos_hint={'x': 0.375, 'y': 0.4},
+            size_hint=(0.25, 0.1)
         )
-        j=Button(
-            text="установить будилиник",
-            pos_hint=({'x':0.375,'y':0.3}),
-            size_hint=(0.25,0.1)
+        j = Button(
+            text="установить будильник",
+            pos_hint={'x': 0.375, 'y': 0.3},
+            size_hint=(0.25, 0.1)
         )
+        
         b.bind(on_press=self.plys10)
         c.bind(on_press=self.minys10)
         d.bind(on_press=self.start1)
@@ -139,6 +148,7 @@ class Timer(Screen):
         g.bind(on_press=self.minys30)
         i.bind(on_press=self.start2)
         j.bind(on_press=self.alarm)
+        
         layout.add_widget(self.a)
         layout.add_widget(b)
         layout.add_widget(c)
@@ -151,6 +161,7 @@ class Timer(Screen):
         layout.add_widget(self.g)
         layout.add_widget(j)
         self.add_widget(layout)
+
     def alarm(self, *args):
         self.manager.current = 'alarm'
 
@@ -173,7 +184,8 @@ class AlarmLayout(Screen):
         self.alarm_cloks = TextInput(
             text="",
             pos_hint={'x': 0.4, 'y': 0.7},
-            size_hint=(0.3, 0.1)
+            size_hint=(0.3, 0.1),
+            multiline=False  # Удобно для мобилок
         )
         layout.add_widget(self.alarm_cloks)
         self.min_label = Label(
@@ -185,7 +197,8 @@ class AlarmLayout(Screen):
         self.alarm_min = TextInput(
             text="",
             pos_hint={'x': 0.4, 'y': 0.6},
-            size_hint=(0.3, 0.1)
+            size_hint=(0.3, 0.1),
+            multiline=False
         )
         layout.add_widget(self.alarm_min)
         self.set_button = Button(
@@ -219,6 +232,7 @@ class AlarmLayout(Screen):
 
     def timer(self, *args):
         self.manager.current = 'home'
+
 class MyApp(App):
     def build(self):
         screen_manager = ScreenManager()
@@ -227,5 +241,6 @@ class MyApp(App):
         screen_manager.add_widget(timer)
         screen_manager.add_widget(alarm)
         return screen_manager
-if __name__=="__main__":
-	MyApp().run()
+
+if __name__ == "__main__":
+    MyApp().run()
