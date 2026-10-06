@@ -48,11 +48,6 @@ jobs:
           pip install --upgrade pip
           pip install "cython<3.0.0" buildozer virtualenv sh colorama jinja2 appdirs toml build
 
-      - name: Pre-clone python-for-android (Fix FileNotFoundError)
-        run: |
-          mkdir -p .buildozer/android/platform
-          git clone --branch master https://github.com .buildozer/android/platform/python-for-android
-
       - name: Build APK with Buildozer
         run: |
           if [ ! -f buildozer.spec ]; then
@@ -66,4 +61,3 @@ jobs:
         with:
           name: apk-package
           path: bin/*.apk
-
