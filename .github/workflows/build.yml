@@ -16,8 +16,8 @@ jobs:
           cp buildozer.spec buildozer.spec.orig 2>/dev/null || true
           cp buildozer.spec.orig buildozer.spec 2>/dev/null || true
           buildozer android debug
-      -name: Upload APK
-       uses: actions/upload-artifact@v3
-       with:
+      - name: Upload APK
+      - uses: actions/upload-artifact@v3
+        with:
          name: apk-package
          path: bin/*.apk
