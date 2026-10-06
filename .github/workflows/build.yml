@@ -21,8 +21,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # Мы полностью убрали конфликтующий шаг setup-android
-
       - name: Install Critical System Dependencies
         run: |
           sudo apt-get update --fix-missing
@@ -46,10 +44,18 @@ jobs:
 
       - name: Build APK with Buildozer
         run: |
+          # 1. Если файла конфигурации нет, создаем его
           if [ ! -f buildozer.spec ]; then
             buildozer init
           fi
-          # Передаем 'y' для автоматического согласия со всеми лицензиями самого buildozer
+          
+          # 2. Принудительно выставляем рабочие версии SDK (33) и NDK (25b)
+          sed -i 's/^#\? \?android.api = .*/android.api = 33/' buildozer.spec
+          sed -i 's/^#\? \?android.ndk = .*/android.ndk = 25b/' buildozer.spec
+          sed -i 's/^#\? \?android.ndk_api = .*/android.ndk_api = 21/' buildozer.spec
+          sed -i 's/^#\? \?android.accept_sdk_license = .*/android.accept_sdk_license = True/' buildozer.spec
+
+          # 3. Запускаем сборку
           yes | buildozer android debug
 
       - name: Upload APK Artifact
