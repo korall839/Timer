@@ -8,6 +8,11 @@ version = 1.0
 requirements = python3,kivy
 orientation = portrait
 
+#(list) Permissions
+android,permissions= INTERNET
+
+
+
 [android]
 android.api = 31
 android.minapi = 21
